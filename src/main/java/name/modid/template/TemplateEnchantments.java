@@ -2,13 +2,13 @@ package name.modid.template;
 
 import name.modid.ArsaItems;
 
-import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 附魔模板的核心数据读写与合法性校验。
@@ -22,9 +22,9 @@ public final class TemplateEnchantments {
 		return stack.is(ArsaItems.ENCHANTMENT_TEMPLATE);
 	}
 
-	/** 模板自身的附魔数据（minecraft:enchantments 组件）。 */
-	public static ItemEnchantments get(ItemStack stack) {
-		return stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+	/** 模板自身的附魔数据。 */
+	public static Map<Enchantment, Integer> get(ItemStack stack) {
+		return EnchantmentHelper.getEnchantments(stack);
 	}
 
 	/**
@@ -34,10 +34,10 @@ public final class TemplateEnchantments {
 	public static ItemStack fromBook(ItemStack book) {
 		ItemStack template = new ItemStack(ArsaItems.ENCHANTMENT_TEMPLATE);
 		// 防御性显式移除：模板输出绝不携带输入附魔书累积的铁砧 penalty。
-		template.remove(DataComponents.REPAIR_COST);
-		ItemEnchantments enchantments = EnchantmentHelper.getEnchantmentsForCrafting(book);
+		template.setRepairCost(0);
+		Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(book);
 		if (!enchantments.isEmpty()) {
-			template.set(DataComponents.ENCHANTMENTS, enchantments);
+			EnchantmentHelper.setEnchantments(enchantments, template);
 		}
 		return template;
 	}
@@ -61,36 +61,36 @@ public final class TemplateEnchantments {
 			return false;
 		}
 
-		ItemEnchantments toAdd = get(template);
+		Map<Enchantment, Integer> toAdd = get(template);
 		if (toAdd.isEmpty()) {
 			return false;
 		}
 
-		ItemEnchantments existing = base.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+		Map<Enchantment, Integer> existing = EnchantmentHelper.getEnchantments(base);
 
 		// 1) 每条附魔必须适用于基底；基底已有同种附魔（不论等级）一律拒绝。
-		for (Holder<Enchantment> holder : toAdd.keySet()) {
-			if (!holder.value().canEnchant(base)) {
+		for (Enchantment enchantment : toAdd.keySet()) {
+			if (!enchantment.canEnchant(base)) {
 				return false;
 			}
-			if (existing.getLevel(holder.value()) > 0) {
+			if (existing.containsKey(enchantment)) {
 				return false;
 			}
 		}
 
 		// 2) 模板内部两两互斥。
-		for (Holder<Enchantment> a : toAdd.keySet()) {
-			for (Holder<Enchantment> b : toAdd.keySet()) {
-				if (a != b && !a.value().isCompatibleWith(b.value())) {
+		for (Enchantment a : toAdd.keySet()) {
+			for (Enchantment b : toAdd.keySet()) {
+				if (a != b && !a.isCompatibleWith(b)) {
 					return false;
 				}
 			}
 		}
 
 		// 3) 与基底已有附魔互斥（双向检查，防御性）。
-		for (Holder<Enchantment> a : toAdd.keySet()) {
-			for (Holder<Enchantment> b : existing.keySet()) {
-				if (!a.value().isCompatibleWith(b.value()) || !b.value().isCompatibleWith(a.value())) {
+		for (Enchantment a : toAdd.keySet()) {
+			for (Enchantment b : existing.keySet()) {
+				if (!a.isCompatibleWith(b) || !b.isCompatibleWith(a)) {
 					return false;
 				}
 			}
@@ -107,15 +107,9 @@ public final class TemplateEnchantments {
 		// 锻造台只消耗 1 个基底；若基底是可堆叠的可附魔物品，结果也必须只有 1 个，
 		// 否则 base.copy() 会把整组数量带到结果槽，形成物品复制。
 		result.setCount(1);
-		ItemEnchantments existing = result.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
-		ItemEnchantments toAdd = get(template);
-		ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(existing);
-
-		for (Holder<Enchantment> holder : toAdd.keySet()) {
-			mutable.upgrade(holder.value(), toAdd.getLevel(holder.value()));
-		}
-
-		result.set(DataComponents.ENCHANTMENTS, mutable.toImmutable());
+		Map<Enchantment, Integer> merged = new HashMap<>(EnchantmentHelper.getEnchantments(result));
+		merged.putAll(get(template));
+		EnchantmentHelper.setEnchantments(merged, result);
 		return result;
 	}
 }

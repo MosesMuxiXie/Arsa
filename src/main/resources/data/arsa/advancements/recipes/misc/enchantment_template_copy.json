@@ -5,7 +5,9 @@
 			"conditions": {
 				"items": [
 					{
-						"items": "arsa:enchantment_template"
+						"items": [
+							"arsa:enchantment_template"
+						]
 					}
 				]
 			},

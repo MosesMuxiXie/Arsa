@@ -3,15 +3,13 @@ package name.modid.template;
 import name.modid.ArsaItems;
 import name.modid.ArsaRecipes;
 
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.Codec;
 
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.crafting.CustomRecipe;
@@ -26,8 +24,7 @@ import net.minecraft.world.level.Level;
 public class TemplateCopyRecipe extends CustomRecipe {
 	public static final TemplateCopyRecipe INSTANCE = new TemplateCopyRecipe();
 
-	public static final MapCodec<TemplateCopyRecipe> CODEC = MapCodec.unit(INSTANCE);
-	public static final StreamCodec<RegistryFriendlyByteBuf, TemplateCopyRecipe> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+	public static final Codec<TemplateCopyRecipe> CODEC = Codec.unit(INSTANCE);
 
 	private static final Ingredient BOOK = Ingredient.of(Items.BOOK);
 	private static final Ingredient TEMPLATE = Ingredient.of(ArsaItems.ENCHANTMENT_TEMPLATE);
@@ -72,13 +69,13 @@ public class TemplateCopyRecipe extends CustomRecipe {
 	}
 
 	@Override
-	public ItemStack assemble(CraftingContainer input, HolderLookup.Provider registries) {
+	public ItemStack assemble(CraftingContainer input, RegistryAccess registries) {
 		ItemStack result = new ItemStack(ArsaItems.ENCHANTMENT_TEMPLATE, 2);
 
 		for (int i = 0; i < input.getContainerSize(); i++) {
 			ItemStack stack = input.getItem(i);
 			if (TemplateEnchantments.isTemplate(stack)) {
-				result.set(DataComponents.ENCHANTMENTS, TemplateEnchantments.get(stack));
+				EnchantmentHelper.setEnchantments(TemplateEnchantments.get(stack), result);
 				break;
 			}
 		}
@@ -116,7 +113,7 @@ public class TemplateCopyRecipe extends CustomRecipe {
 	}
 
 	@Override
-	public ItemStack getResultItem(HolderLookup.Provider registries) {
+	public ItemStack getResultItem(RegistryAccess registries) {
 		return new ItemStack(ArsaItems.ENCHANTMENT_TEMPLATE, 2);
 	}
 

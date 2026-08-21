@@ -3,12 +3,10 @@ package name.modid.template;
 import name.modid.ArsaItems;
 import name.modid.ArsaRecipes;
 
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.Codec;
 
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.Container;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SmithingRecipe;
@@ -21,8 +19,7 @@ import net.minecraft.world.level.Level;
 public class TemplateApplicationRecipe implements SmithingRecipe {
 	public static final TemplateApplicationRecipe INSTANCE = new TemplateApplicationRecipe();
 
-	public static final MapCodec<TemplateApplicationRecipe> CODEC = MapCodec.unit(INSTANCE);
-	public static final StreamCodec<RegistryFriendlyByteBuf, TemplateApplicationRecipe> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+	public static final Codec<TemplateApplicationRecipe> CODEC = Codec.unit(INSTANCE);
 
 	private TemplateApplicationRecipe() {
 	}
@@ -51,7 +48,7 @@ public class TemplateApplicationRecipe implements SmithingRecipe {
 	}
 
 	@Override
-	public ItemStack assemble(Container input, HolderLookup.Provider registries) {
+	public ItemStack assemble(Container input, RegistryAccess registries) {
 		ItemStack template = input.getItem(0);
 		ItemStack base = input.getItem(1);
 
@@ -63,7 +60,7 @@ public class TemplateApplicationRecipe implements SmithingRecipe {
 	}
 
 	@Override
-	public ItemStack getResultItem(HolderLookup.Provider registries) {
+	public ItemStack getResultItem(RegistryAccess registries) {
 		// 实际结果取决于基底物品及模板携带的附魔，无法静态预览。
 		return ItemStack.EMPTY;
 	}

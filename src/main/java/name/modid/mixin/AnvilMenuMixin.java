@@ -10,7 +10,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AnvilMenu;
@@ -63,7 +62,7 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
 		// 制作：附魔书(左) + 绿宝石块(右)
 		if (left.is(Items.ENCHANTED_BOOK) && right.is(Items.EMERALD_BLOCK)) {
 			ci.cancel();
-			if (EnchantmentHelper.getEnchantmentsForCrafting(left).isEmpty() || right.getCount() < 9) {
+			if (EnchantmentHelper.getEnchantments(left).isEmpty() || right.getCount() < 9) {
 				this.resultSlots.setItem(0, ItemStack.EMPTY);
 				this.cost.set(0);
 				this.repairItemCountCost = 0;
@@ -103,7 +102,7 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
 	@Inject(method = "onTake", at = @At("HEAD"))
 	private void arsa$normalizeTemplateBeforeTake(Player player, ItemStack stack, CallbackInfo ci) {
 		if (TemplateEnchantments.isTemplate(stack)) {
-			stack.remove(DataComponents.REPAIR_COST);
+			stack.setRepairCost(0);
 			this.cost.set(TEMPLATE_LEVEL_COST);
 			this.repairItemCountCost = 9;
 		}
@@ -112,7 +111,7 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
 	@Unique
 	private void arsa$setFixedTemplateResult(ItemStack result) {
 		// 模板永不继承附魔书经多次铁砧合并产生的 penalty。
-		result.remove(DataComponents.REPAIR_COST);
+		result.setRepairCost(0);
 		this.resultSlots.setItem(0, result);
 		this.cost.set(TEMPLATE_LEVEL_COST);
 		this.repairItemCountCost = 9;
