@@ -1,0 +1,129 @@
+Summary for client-1.21.11.jar
+Decompiled with CFR 0.152
+
+
+fxb
+----------------------------
+
+a(fxh java.util.Collection<java.lang.String> )
+  Could not resolve type clashes
+  Unable to fully structure code
+
+
+gxx
+----------------------------
+
+a(gfj java.lang.String java.nio.file.Path )
+  WARNING - bad return control flow
+
+
+gsf
+----------------------------
+
+a(int )
+  Unable to fully structure code
+
+
+gsb
+----------------------------
+
+b(yf gfj gsb )
+  Loose catch block
+
+
+bq
+----------------------------
+
+a(cgk )
+  Unable to fully structure code
+
+
+vf
+----------------------------
+
+c(java.io.DataInput vw vi )
+  Exception : org.benf.cfr.reader.util.ConfusedCFRException: Tried to end blocks [4[SWITCH], 8[CASE]], but top level block is 9[SWITCH]
+
+
+aox
+----------------------------
+
+a(T java.util.List<T> java.util.function.Function<T, T> java.util.function.IntPredicate com.mojang.brigadier.context.ContextChain<T> uz hh<T> api<com.mojang.brigadier.context.CommandContext<T>, java.util.Collection<ht<T>>> hb )
+  Exception : org.benf.cfr.reader.util.ConfusedCFRException: Started 2 blocks at once
+
+
+ars
+----------------------------
+
+b(ed arr ex$g )
+  Loose catch block
+
+
+ayd
+----------------------------
+
+a(awj dvu )
+  Unable to fully structure code
+
+
+bfx
+----------------------------
+
+a(java.nio.file.Path java.net.URL java.util.Map<java.lang.String, java.lang.String> com.google.common.hash.HashFunction com.google.common.hash.HashCode int java.net.Proxy bfx$a )
+  Loose catch block
+
+
+chl
+----------------------------
+
+d_()
+  Unable to fully structure code
+
+
+cxh
+----------------------------
+
+b(axf cfy )
+  Unable to fully structure code
+
+
+dfc
+----------------------------
+
+g()
+  Unable to fully structure code
+
+
+dga
+----------------------------
+
+a(axf cex float )
+  Unable to fully structure code
+
+
+dmf
+----------------------------
+
+a(cgk cgk chl )
+  Unable to fully structure code
+
+
+dpf
+----------------------------
+
+a(elb jf$a )
+  Exception : org.benf.cfr.reader.util.ConfusedCFRException: Tried to end blocks [5[CATCHBLOCK]], but top level block is 2[TRYBLOCK]
+
+
+dzk
+----------------------------
+
+a(dlt eoh dwo is ddm cdb fti )
+  Unable to fully structure code
+
+
+ezj
+----------------------------
+
+a(dwp ffg java.util.Set<is> java.util.Set<is> java.util.Set<is> )
+  Unable to fully structure code

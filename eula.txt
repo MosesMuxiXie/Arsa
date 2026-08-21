@@ -1,0 +1,2 @@
+#Minecraft server EULA for local Arsa smoke test
+eula=true

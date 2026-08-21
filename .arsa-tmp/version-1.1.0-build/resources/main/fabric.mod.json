@@ -1,0 +1,33 @@
+{
+	"schemaVersion": 1,
+	"id": "arsa",
+	"version": "1.1.0",
+	"name": "Arsa",
+	"description": "Vanilla-style Enchantment Templates: forge enchanted books into reusable-copy templates and apply enchantments through the smithing table. 附魔模板：铁砧制作、工作台复制、锻造台应用。",
+	"authors": [
+		"Arsa"
+	],
+	"license": "CC0-1.0",
+	"icon": "assets/arsa/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"name.modid.Arsa"
+		],
+		"client": [
+			"name.modid.client.ArsaClient"
+		],
+		"fabric-datagen": [
+			"name.modid.client.ArsaDataGenerator"
+		]
+	},
+	"mixins": [
+		"arsa.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~1.21.11",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
