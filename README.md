@@ -2,7 +2,7 @@
 
 **中文** | [English](README_EN.md)
 
-Minecraft 1.19 Fabric 附魔模板模组。它把附魔书制成可复制、一次性使用的模板，
+Minecraft 1.18.2 Fabric 附魔模板模组。它把附魔书制成可复制、一次性使用的模板，
 再通过锻造台把整组附魔转移到目标物品上。
 
 ## 用法
@@ -20,8 +20,8 @@ Minecraft 1.19 Fabric 附魔模板模组。它把附魔书制成可复制、一�
 .\gradlew.bat build
 ```
 
-正式模组与源码包统一生成在 `dist`：`arsa-1.1.0-mc1.19.jar` 和
-`arsa-1.1.0-mc1.19-sources.jar`。游戏安装时只需要前者。
+正式模组与源码包统一生成在 `dist`：`arsa-1.1.0-mc1.18.2.jar` 和
+`arsa-1.1.0-mc1.18.2-sources.jar`。游戏安装时只需要前者。
 
-需要 Java 17、Fabric Loader 0.19.3 与 Fabric API 0.58.0+1.19。详细设计与验收矩阵见
+需要 Java 17、Fabric Loader 0.19.3 与 Fabric API 0.77.0+1.18.2。详细设计与验收矩阵见
 `arsa-design.md`。项目使用 [Apache License 2.0](LICENSE) 许可证。
