@@ -6,6 +6,7 @@ import name.modid.ArsaRecipes;
 import com.mojang.serialization.MapCodec;
 
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -15,15 +16,8 @@ import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.display.RecipeDisplay;
-import net.minecraft.world.item.crafting.display.ShapedCraftingRecipeDisplay;
-import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * 工作台复制配方：上中=普通书，正中=附魔模板，其余 7 格=绿宝石。
@@ -43,13 +37,6 @@ public class TemplateCopyRecipe extends CustomRecipe {
 	 * 3×3 工作台中的行优先原料顺序。PlacementInfo 同时供配方书判定可合成性
 	 * 和服务端一键摆放使用，因此必须与 matches 里的坐标严格一致。
 	 */
-	private static final List<Optional<Ingredient>> PATTERN_INGREDIENTS = List.of(
-		Optional.of(EMERALD), Optional.of(BOOK), Optional.of(EMERALD),
-		Optional.of(EMERALD), Optional.of(TEMPLATE), Optional.of(EMERALD),
-		Optional.of(EMERALD), Optional.of(EMERALD), Optional.of(EMERALD)
-	);
-	private static final PlacementInfo PLACEMENT_INFO = PlacementInfo.createFromOptionals(PATTERN_INGREDIENTS);
-
 	private TemplateCopyRecipe() {
 		super(CraftingBookCategory.MISC);
 	}
@@ -109,23 +96,28 @@ public class TemplateCopyRecipe extends CustomRecipe {
 	}
 
 	@Override
-	public PlacementInfo placementInfo() {
-		return PLACEMENT_INFO;
+	public boolean canCraftInDimensions(int width, int height) {
+		return width >= 3 && height >= 3;
 	}
 
 	@Override
-	public List<RecipeDisplay> display() {
-		List<SlotDisplay> ingredients = PATTERN_INGREDIENTS.stream()
-			.map(ingredient -> ingredient.map(Ingredient::display).orElse(SlotDisplay.Empty.INSTANCE))
-			.toList();
+	public NonNullList<Ingredient> getIngredients() {
+		NonNullList<Ingredient> ingredients = NonNullList.create();
+		ingredients.add(EMERALD);
+		ingredients.add(BOOK);
+		ingredients.add(EMERALD);
+		ingredients.add(EMERALD);
+		ingredients.add(TEMPLATE);
+		ingredients.add(EMERALD);
+		ingredients.add(EMERALD);
+		ingredients.add(EMERALD);
+		ingredients.add(EMERALD);
+		return ingredients;
+	}
 
-		return List.of(new ShapedCraftingRecipeDisplay(
-			3,
-			3,
-			ingredients,
-			new SlotDisplay.ItemStackSlotDisplay(new ItemStack(ArsaItems.ENCHANTMENT_TEMPLATE, 2)),
-			new SlotDisplay.ItemSlotDisplay(Items.CRAFTING_TABLE)
-		));
+	@Override
+	public ItemStack getResultItem(HolderLookup.Provider registries) {
+		return new ItemStack(ArsaItems.ENCHANTMENT_TEMPLATE, 2);
 	}
 
 	@Override

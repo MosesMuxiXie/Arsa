@@ -9,15 +9,10 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SmithingRecipe;
 import net.minecraft.world.item.crafting.SmithingRecipeInput;
 import net.minecraft.world.level.Level;
-
-import java.util.Optional;
 
 /**
  * 锻造台应用配方：模板槽=附魔模板，基底槽=可附魔物品，材料槽必须为空。
@@ -33,21 +28,18 @@ public class TemplateApplicationRecipe implements SmithingRecipe {
 	}
 
 	@Override
-	public Optional<Ingredient> templateIngredient() {
-		return Optional.of(Ingredient.of(ArsaItems.ENCHANTMENT_TEMPLATE));
+	public boolean isTemplateIngredient(ItemStack stack) {
+		return stack.is(ArsaItems.ENCHANTMENT_TEMPLATE);
 	}
 
 	@Override
-	public Optional<Ingredient> baseIngredient() {
-		// 槽位插入由 SmithingMenuMixin 放宽到所有合法基底；这里仅提供非空占位原料，
-		// 使 RecipeManager 能正常收集 SMITHING_BASE 属性集。
-		return Optional.of(Ingredient.of(Items.EMERALD));
+	public boolean isBaseIngredient(ItemStack stack) {
+		return TemplateEnchantments.isValidBase(stack);
 	}
 
 	@Override
-	public Optional<Ingredient> additionIngredient() {
-		// 材料槽必须为空。
-		return Optional.empty();
+	public boolean isAdditionIngredient(ItemStack stack) {
+		return false;
 	}
 
 	@Override
@@ -71,13 +63,14 @@ public class TemplateApplicationRecipe implements SmithingRecipe {
 	}
 
 	@Override
-	public boolean isSpecial() {
-		return true;
+	public ItemStack getResultItem(HolderLookup.Provider registries) {
+		// 实际结果取决于基底物品及模板携带的附魔，无法静态预览。
+		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public PlacementInfo placementInfo() {
-		return PlacementInfo.NOT_PLACEABLE;
+	public boolean isSpecial() {
+		return true;
 	}
 
 	@Override

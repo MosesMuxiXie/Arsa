@@ -2,7 +2,7 @@
 
 **中文** | [English](README_EN.md)
 
-Minecraft 1.21.2 Fabric 附魔模板模组。它把附魔书制成可复制、一次性使用的模板，
+Minecraft 1.21.1 Fabric 附魔模板模组。它把附魔书制成可复制、一次性使用的模板，
 再通过锻造台把整组附魔转移到目标物品上。
 
 ## 用法
@@ -20,8 +20,8 @@ Minecraft 1.21.2 Fabric 附魔模板模组。它把附魔书制成可复制、�
 .\gradlew.bat build
 ```
 
-正式模组与源码包统一生成在 `dist`：`arsa-1.1.0-mc1.21.2.jar` 和
-`arsa-1.1.0-mc1.21.2-sources.jar`。游戏安装时只需要前者。
+正式模组与源码包统一生成在 `dist`：`arsa-1.1.0-mc1.21.1.jar` 和
+`arsa-1.1.0-mc1.21.1-sources.jar`。游戏安装时只需要前者。
 
-需要 Java 21、Fabric Loader 0.19.3 与 Fabric API 0.106.1+1.21.2。详细设计与验收矩阵见
+需要 Java 21、Fabric Loader 0.19.3 与 Fabric API 0.116.15+1.21.1。详细设计与验收矩阵见
 `arsa-design.md`。项目使用 [Apache License 2.0](LICENSE) 许可证。

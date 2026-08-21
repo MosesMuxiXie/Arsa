@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.world.inventory.ItemCombinerMenuSlotDefinition;
 import net.minecraft.world.inventory.SmithingMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeAccess;
 
 import java.util.function.Predicate;
 
@@ -27,7 +26,7 @@ public abstract class SmithingMenuMixin {
 	 * 因此在原版槽位定义基础上放宽基底槽（保留原版行为，取并集）。
 	 */
 	@Inject(method = "createInputSlotDefinitions", at = @At("RETURN"), cancellable = true)
-	private static void arsa$widenBaseSlot(RecipeAccess recipeAccess, CallbackInfoReturnable<ItemCombinerMenuSlotDefinition> cir) {
+	private void arsa$widenBaseSlot(CallbackInfoReturnable<ItemCombinerMenuSlotDefinition> cir) {
 		ItemCombinerMenuSlotDefinition original = cir.getReturnValue();
 		ItemCombinerMenuSlotDefinition.Builder builder = ItemCombinerMenuSlotDefinition.create();
 

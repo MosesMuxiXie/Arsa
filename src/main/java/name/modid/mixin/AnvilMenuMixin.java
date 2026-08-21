@@ -41,8 +41,8 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
 	private int repairItemCountCost;
 
 	protected AnvilMenuMixin(MenuType<?> type, int syncId, Inventory playerInventory,
-	                         ContainerLevelAccess context, ItemCombinerMenuSlotDefinition forgingSlotsManager) {
-		super(type, syncId, playerInventory, context, forgingSlotsManager);
+	                         ContainerLevelAccess context) {
+		super(type, syncId, playerInventory, context);
 	}
 
 	@Inject(method = "createResult", at = @At("HEAD"), cancellable = true)
