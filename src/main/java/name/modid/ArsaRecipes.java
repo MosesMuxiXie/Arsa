@@ -3,11 +3,12 @@ package name.modid;
 import name.modid.template.TemplateApplicationRecipe;
 import name.modid.template.TemplateCopyRecipe;
 
-import com.mojang.serialization.Codec;
+import com.google.gson.JsonObject;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
 // 1.21.11 中 RecipeSerializer#streamCodec 已标记弃用，但仍是自定义序列化器必须实现的接口方法。
@@ -15,13 +16,13 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 public final class ArsaRecipes {
 	public static final RecipeSerializer<TemplateCopyRecipe> TEMPLATE_COPY = new RecipeSerializer<>() {
 		@Override
-		public Codec<TemplateCopyRecipe> codec() {
-			return TemplateCopyRecipe.CODEC;
+		public TemplateCopyRecipe fromJson(ResourceLocation id, JsonObject json) {
+			return new TemplateCopyRecipe(id);
 		}
 
 		@Override
-		public TemplateCopyRecipe fromNetwork(FriendlyByteBuf buffer) {
-			return TemplateCopyRecipe.INSTANCE;
+		public TemplateCopyRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buffer) {
+			return new TemplateCopyRecipe(id);
 		}
 
 		@Override
@@ -31,13 +32,13 @@ public final class ArsaRecipes {
 
 	public static final RecipeSerializer<TemplateApplicationRecipe> TEMPLATE_APPLICATION = new RecipeSerializer<>() {
 		@Override
-		public Codec<TemplateApplicationRecipe> codec() {
-			return TemplateApplicationRecipe.CODEC;
+		public TemplateApplicationRecipe fromJson(ResourceLocation id, JsonObject json) {
+			return new TemplateApplicationRecipe(id);
 		}
 
 		@Override
-		public TemplateApplicationRecipe fromNetwork(FriendlyByteBuf buffer) {
-			return TemplateApplicationRecipe.INSTANCE;
+		public TemplateApplicationRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buffer) {
+			return new TemplateApplicationRecipe(id);
 		}
 
 		@Override

@@ -3,11 +3,10 @@ package name.modid.template;
 import name.modid.ArsaItems;
 import name.modid.ArsaRecipes;
 
-import com.mojang.serialization.Codec;
-
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SmithingRecipe;
 import net.minecraft.world.level.Level;
@@ -17,11 +16,15 @@ import net.minecraft.world.level.Level;
  * 复用原版 RecipeType.SMITHING，失败时 assemble 返回 EMPTY，结果槽即为空。
  */
 public class TemplateApplicationRecipe implements SmithingRecipe {
-	public static final TemplateApplicationRecipe INSTANCE = new TemplateApplicationRecipe();
+	private final ResourceLocation id;
 
-	public static final Codec<TemplateApplicationRecipe> CODEC = Codec.unit(INSTANCE);
+	public TemplateApplicationRecipe(ResourceLocation id) {
+		this.id = id;
+	}
 
-	private TemplateApplicationRecipe() {
+	@Override
+	public ResourceLocation getId() {
+		return id;
 	}
 
 	@Override

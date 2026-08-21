@@ -3,13 +3,12 @@ package name.modid.template;
 import name.modid.ArsaItems;
 import name.modid.ArsaRecipes;
 
-import com.mojang.serialization.Codec;
-
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.crafting.CustomRecipe;
@@ -22,10 +21,6 @@ import net.minecraft.world.level.Level;
  * 输出 2 个携带完全相同附魔组件的模板。
  */
 public class TemplateCopyRecipe extends CustomRecipe {
-	public static final TemplateCopyRecipe INSTANCE = new TemplateCopyRecipe();
-
-	public static final Codec<TemplateCopyRecipe> CODEC = Codec.unit(INSTANCE);
-
 	private static final Ingredient BOOK = Ingredient.of(Items.BOOK);
 	private static final Ingredient TEMPLATE = Ingredient.of(ArsaItems.ENCHANTMENT_TEMPLATE);
 	private static final Ingredient EMERALD = Ingredient.of(Items.EMERALD);
@@ -34,8 +29,8 @@ public class TemplateCopyRecipe extends CustomRecipe {
 	 * 3×3 工作台中的行优先原料顺序。PlacementInfo 同时供配方书判定可合成性
 	 * 和服务端一键摆放使用，因此必须与 matches 里的坐标严格一致。
 	 */
-	private TemplateCopyRecipe() {
-		super(CraftingBookCategory.MISC);
+	public TemplateCopyRecipe(ResourceLocation id) {
+		super(id, CraftingBookCategory.MISC);
 	}
 
 	@Override
