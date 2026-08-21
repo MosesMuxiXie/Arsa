@@ -6,12 +6,12 @@ import name.modid.ArsaRecipes;
 import com.mojang.serialization.MapCodec;
 
 import net.minecraft.core.HolderLookup;
+import net.minecraft.world.Container;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SmithingRecipe;
-import net.minecraft.world.item.crafting.SmithingRecipeInput;
 import net.minecraft.world.level.Level;
 
 /**
@@ -43,17 +43,17 @@ public class TemplateApplicationRecipe implements SmithingRecipe {
 	}
 
 	@Override
-	public boolean matches(SmithingRecipeInput input, Level level) {
-		return TemplateEnchantments.isTemplate(input.template())
-			&& !TemplateEnchantments.get(input.template()).isEmpty()
-			&& TemplateEnchantments.isValidBase(input.base())
-			&& input.addition().isEmpty();
+	public boolean matches(Container input, Level level) {
+		return TemplateEnchantments.isTemplate(input.getItem(0))
+			&& !TemplateEnchantments.get(input.getItem(0)).isEmpty()
+			&& TemplateEnchantments.isValidBase(input.getItem(1))
+			&& input.getItem(2).isEmpty();
 	}
 
 	@Override
-	public ItemStack assemble(SmithingRecipeInput input, HolderLookup.Provider registries) {
-		ItemStack template = input.template();
-		ItemStack base = input.base();
+	public ItemStack assemble(Container input, HolderLookup.Provider registries) {
+		ItemStack template = input.getItem(0);
+		ItemStack base = input.getItem(1);
 
 		if (!TemplateEnchantments.canApply(template, base)) {
 			return ItemStack.EMPTY;

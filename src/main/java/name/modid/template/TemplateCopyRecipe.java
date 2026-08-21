@@ -13,7 +13,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -42,13 +42,13 @@ public class TemplateCopyRecipe extends CustomRecipe {
 	}
 
 	@Override
-	public boolean matches(CraftingInput input, Level level) {
-		if (input.width() != 3 || input.height() != 3) {
+	public boolean matches(CraftingContainer input, Level level) {
+		if (input.getWidth() != 3 || input.getHeight() != 3) {
 			return false;
 		}
 
-		ItemStack book = input.getItem(1, 0);
-		ItemStack template = input.getItem(1, 1);
+		ItemStack book = input.getItem(1);
+		ItemStack template = input.getItem(4);
 
 		if (!book.is(Items.BOOK)) {
 			return false;
@@ -62,7 +62,7 @@ public class TemplateCopyRecipe extends CustomRecipe {
 				if ((x == 1 && y == 0) || (x == 1 && y == 1)) {
 					continue;
 				}
-				if (!input.getItem(x, y).is(Items.EMERALD)) {
+				if (!input.getItem(x + y * 3).is(Items.EMERALD)) {
 					return false;
 				}
 			}
@@ -72,10 +72,10 @@ public class TemplateCopyRecipe extends CustomRecipe {
 	}
 
 	@Override
-	public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries) {
+	public ItemStack assemble(CraftingContainer input, HolderLookup.Provider registries) {
 		ItemStack result = new ItemStack(ArsaItems.ENCHANTMENT_TEMPLATE, 2);
 
-		for (int i = 0; i < input.size(); i++) {
+		for (int i = 0; i < input.getContainerSize(); i++) {
 			ItemStack stack = input.getItem(i);
 			if (TemplateEnchantments.isTemplate(stack)) {
 				result.set(DataComponents.ENCHANTMENTS, TemplateEnchantments.get(stack));

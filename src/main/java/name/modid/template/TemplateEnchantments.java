@@ -73,7 +73,7 @@ public final class TemplateEnchantments {
 			if (!holder.value().canEnchant(base)) {
 				return false;
 			}
-			if (existing.getLevel(holder) > 0) {
+			if (existing.getLevel(holder.value()) > 0) {
 				return false;
 			}
 		}
@@ -81,7 +81,7 @@ public final class TemplateEnchantments {
 		// 2) 模板内部两两互斥。
 		for (Holder<Enchantment> a : toAdd.keySet()) {
 			for (Holder<Enchantment> b : toAdd.keySet()) {
-				if (a != b && !Enchantment.areCompatible(a, b)) {
+				if (a != b && !a.value().isCompatibleWith(b.value())) {
 					return false;
 				}
 			}
@@ -90,7 +90,7 @@ public final class TemplateEnchantments {
 		// 3) 与基底已有附魔互斥（双向检查，防御性）。
 		for (Holder<Enchantment> a : toAdd.keySet()) {
 			for (Holder<Enchantment> b : existing.keySet()) {
-				if (!Enchantment.areCompatible(a, b) || !Enchantment.areCompatible(b, a)) {
+				if (!a.value().isCompatibleWith(b.value()) || !b.value().isCompatibleWith(a.value())) {
 					return false;
 				}
 			}
@@ -112,7 +112,7 @@ public final class TemplateEnchantments {
 		ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(existing);
 
 		for (Holder<Enchantment> holder : toAdd.keySet()) {
-			mutable.upgrade(holder, toAdd.getLevel(holder));
+			mutable.upgrade(holder.value(), toAdd.getLevel(holder.value()));
 		}
 
 		result.set(DataComponents.ENCHANTMENTS, mutable.toImmutable());
