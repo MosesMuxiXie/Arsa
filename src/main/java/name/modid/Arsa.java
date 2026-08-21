@@ -1,7 +1,7 @@
 package name.modid;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -20,8 +20,8 @@ public class Arsa implements ModInitializer {
 		ArsaItems.init();
 		ArsaRecipes.init();
 
-		ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.INGREDIENTS).register(entries ->
-			entries.addAfter(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE, ArsaItems.ENCHANTMENT_TEMPLATE)
+		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS).register(output ->
+			output.insertAfter(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE, ArsaItems.ENCHANTMENT_TEMPLATE)
 		);
 
 		LOGGER.info("Arsa enchantment template initialized.");

@@ -5,11 +5,11 @@ import name.modid.ArsaRecipes;
 
 import com.mojang.serialization.MapCodec;
 
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
@@ -51,7 +51,7 @@ public class TemplateCopyRecipe extends CustomRecipe {
 	private static final PlacementInfo PLACEMENT_INFO = PlacementInfo.createFromOptionals(PATTERN_INGREDIENTS);
 
 	private TemplateCopyRecipe() {
-		super(CraftingBookCategory.MISC);
+		super();
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public class TemplateCopyRecipe extends CustomRecipe {
 	}
 
 	@Override
-	public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries) {
+	public ItemStack assemble(CraftingInput input) {
 		ItemStack result = new ItemStack(ArsaItems.ENCHANTMENT_TEMPLATE, 2);
 
 		for (int i = 0; i < input.size(); i++) {
@@ -123,7 +123,7 @@ public class TemplateCopyRecipe extends CustomRecipe {
 			3,
 			3,
 			ingredients,
-			new SlotDisplay.ItemStackSlotDisplay(new ItemStack(ArsaItems.ENCHANTMENT_TEMPLATE, 2)),
+			new SlotDisplay.ItemStackSlotDisplay(new ItemStackTemplate(ArsaItems.ENCHANTMENT_TEMPLATE, 2)),
 			new SlotDisplay.ItemSlotDisplay(Items.CRAFTING_TABLE)
 		));
 	}

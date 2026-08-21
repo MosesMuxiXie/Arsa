@@ -14,29 +14,15 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 // 1.21.11 中 RecipeSerializer#streamCodec 已标记弃用，但仍是自定义序列化器必须实现的接口方法。
 @SuppressWarnings("deprecation")
 public final class ArsaRecipes {
-	public static final RecipeSerializer<TemplateCopyRecipe> TEMPLATE_COPY = new RecipeSerializer<>() {
-		@Override
-		public MapCodec<TemplateCopyRecipe> codec() {
-			return TemplateCopyRecipe.CODEC;
-		}
+	public static final RecipeSerializer<TemplateCopyRecipe> TEMPLATE_COPY = new RecipeSerializer<>(
+		TemplateCopyRecipe.CODEC,
+		TemplateCopyRecipe.STREAM_CODEC
+	);
 
-		@Override
-		public StreamCodec<RegistryFriendlyByteBuf, TemplateCopyRecipe> streamCodec() {
-			return TemplateCopyRecipe.STREAM_CODEC;
-		}
-	};
-
-	public static final RecipeSerializer<TemplateApplicationRecipe> TEMPLATE_APPLICATION = new RecipeSerializer<>() {
-		@Override
-		public MapCodec<TemplateApplicationRecipe> codec() {
-			return TemplateApplicationRecipe.CODEC;
-		}
-
-		@Override
-		public StreamCodec<RegistryFriendlyByteBuf, TemplateApplicationRecipe> streamCodec() {
-			return TemplateApplicationRecipe.STREAM_CODEC;
-		}
-	};
+	public static final RecipeSerializer<TemplateApplicationRecipe> TEMPLATE_APPLICATION = new RecipeSerializer<>(
+		TemplateApplicationRecipe.CODEC,
+		TemplateApplicationRecipe.STREAM_CODEC
+	);
 
 	private ArsaRecipes() {
 	}

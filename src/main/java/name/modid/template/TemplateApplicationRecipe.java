@@ -5,7 +5,6 @@ import name.modid.ArsaRecipes;
 
 import com.mojang.serialization.MapCodec;
 
-import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
@@ -59,7 +58,7 @@ public class TemplateApplicationRecipe implements SmithingRecipe {
 	}
 
 	@Override
-	public ItemStack assemble(SmithingRecipeInput input, HolderLookup.Provider registries) {
+	public ItemStack assemble(SmithingRecipeInput input) {
 		ItemStack template = input.template();
 		ItemStack base = input.base();
 
@@ -73,6 +72,16 @@ public class TemplateApplicationRecipe implements SmithingRecipe {
 	@Override
 	public boolean isSpecial() {
 		return true;
+	}
+
+	@Override
+	public boolean showNotification() {
+		return false;
+	}
+
+	@Override
+	public String group() {
+		return "";
 	}
 
 	@Override
