@@ -38,10 +38,10 @@ public class TemplateApplicationRecipe implements SmithingRecipe {
 	}
 
 	@Override
-	public Ingredient baseIngredient() {
+	public Optional<Ingredient> baseIngredient() {
 		// 槽位插入由 SmithingMenuMixin 放宽到所有合法基底；这里仅提供非空占位原料，
 		// 使 RecipeManager 能正常收集 SMITHING_BASE 属性集。
-		return Ingredient.of(Items.EMERALD);
+		return Optional.of(Ingredient.of(Items.EMERALD));
 	}
 
 	@Override
