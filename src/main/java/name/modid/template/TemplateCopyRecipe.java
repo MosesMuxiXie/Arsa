@@ -4,7 +4,6 @@ import name.modid.ArsaItems;
 import name.modid.ArsaRecipes;
 
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -64,7 +63,7 @@ public class TemplateCopyRecipe extends CustomRecipe {
 	}
 
 	@Override
-	public ItemStack assemble(CraftingContainer input, RegistryAccess registries) {
+	public ItemStack assemble(CraftingContainer input) {
 		ItemStack result = new ItemStack(ArsaItems.ENCHANTMENT_TEMPLATE, 2);
 
 		for (int i = 0; i < input.getContainerSize(); i++) {
@@ -108,7 +107,7 @@ public class TemplateCopyRecipe extends CustomRecipe {
 	}
 
 	@Override
-	public ItemStack getResultItem(RegistryAccess registries) {
+	public ItemStack getResultItem() {
 		return new ItemStack(ArsaItems.ENCHANTMENT_TEMPLATE, 2);
 	}
 

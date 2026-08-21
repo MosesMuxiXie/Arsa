@@ -21,7 +21,7 @@ public class Arsa implements ModInitializer {
 		ArsaRecipes.init();
 
 		ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.INGREDIENTS).register(entries ->
-			entries.addAfter(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE, ArsaItems.ENCHANTMENT_TEMPLATE)
+			entries.addAfter(Items.ENCHANTED_BOOK, ArsaItems.ENCHANTMENT_TEMPLATE)
 		);
 
 		LOGGER.info("Arsa enchantment template initialized.");
