@@ -6,7 +6,6 @@ import name.modid.template.TemplateCopyRecipe;
 import com.google.gson.JsonObject;
 
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -50,7 +49,7 @@ public final class ArsaRecipes {
 	}
 
 	public static void init() {
-		Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, Arsa.id("template_copy"), TEMPLATE_COPY);
-		Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, Arsa.id("template_application"), TEMPLATE_APPLICATION);
+		Registry.register(Registry.RECIPE_SERIALIZER, Arsa.id("template_copy"), TEMPLATE_COPY);
+		Registry.register(Registry.RECIPE_SERIALIZER, Arsa.id("template_application"), TEMPLATE_APPLICATION);
 	}
 }

@@ -8,7 +8,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -29,7 +28,7 @@ public class TemplateCopyRecipe extends CustomRecipe {
 	 * 和服务端一键摆放使用，因此必须与 matches 里的坐标严格一致。
 	 */
 	public TemplateCopyRecipe(ResourceLocation id) {
-		super(id, CraftingBookCategory.MISC);
+		super(id);
 	}
 
 	@Override

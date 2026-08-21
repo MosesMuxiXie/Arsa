@@ -1,11 +1,7 @@
 package name.modid;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Items;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,10 +15,6 @@ public class Arsa implements ModInitializer {
 	public void onInitialize() {
 		ArsaItems.init();
 		ArsaRecipes.init();
-
-		ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.INGREDIENTS).register(entries ->
-			entries.addAfter(Items.ENCHANTED_BOOK, ArsaItems.ENCHANTMENT_TEMPLATE)
-		);
 
 		LOGGER.info("Arsa enchantment template initialized.");
 	}

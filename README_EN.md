@@ -2,7 +2,7 @@
 
 [中文](README.md) | **English**
 
-Arsa is a Fabric mod for Minecraft 1.19.3. It turns enchanted books into
+Arsa is a Fabric mod for Minecraft 1.19.2. It turns enchanted books into
 copyable, single-use enchantment templates, then applies all enchantments on a
 template to a target item through the smithing table.
 
@@ -31,11 +31,11 @@ recipe placement.
 ```
 
 The distributable mod and source archive are always written to `dist` as
-`arsa-1.1.0-mc1.19.3.jar` and `arsa-1.1.0-mc1.19.3-sources.jar`. Install only the former in the
+`arsa-1.1.0-mc1.19.2.jar` and `arsa-1.1.0-mc1.19.2-sources.jar`. Install only the former in the
 game's `mods` directory.
 
 Building requires Java 17. Running the mod requires Fabric Loader 0.19.3 and
-Fabric API 0.76.1+1.19.3. See `arsa-design.md` for the detailed design and
+Fabric API 0.77.0+1.19.2. See `arsa-design.md` for the detailed design and
 acceptance checklist.
 
 ## License
