@@ -35,7 +35,7 @@ This mod only supports versions after 1.18, and after 2026/9 only updates mods a
 ```
 
 The distributable mod and source archive are always written to `dist` as
-`arsa-1.1.0.jar` and `arsa-1.1.0-sources.jar`. Install only the former in the
+`arsa-1.2.0.jar` and `arsa-1.2.0-sources.jar`. Install only the former in the
 game's `mods` directory.
 
 Building requires Java 21. Running the mod requires Fabric Loader 0.19.3 and
