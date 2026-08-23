@@ -31,7 +31,7 @@ recipe placement.
 ```
 
 The distributable mod and source archive are always written to `dist` as
-`arsa-1.1.0-mc1.21.7.jar` and `arsa-1.1.0-mc1.21.7-sources.jar`. Install only the former in the
+`arsa-1.2.0-mc1.21.7.jar` and `arsa-1.2.0-mc1.21.7-sources.jar`. Install only the former in the
 game's `mods` directory.
 
 Building requires Java 21. Running the mod requires Fabric Loader 0.19.3 and
