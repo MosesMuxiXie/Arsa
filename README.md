@@ -20,8 +20,8 @@ Minecraft 1.20.5 Fabric 附魔模板模组。它把附魔书制成可复制、�
 .\gradlew.bat build
 ```
 
-正式模组与源码包统一生成在 `dist`：`arsa-1.1.0-mc1.20.5.jar` 和
-`arsa-1.1.0-mc1.20.5-sources.jar`。游戏安装时只需要前者。
+正式模组与源码包统一生成在 `dist`：`arsa-1.2.0-mc1.20.5.jar` 和
+`arsa-1.2.0-mc1.20.5-sources.jar`。游戏安装时只需要前者。
 
 需要 Java 21、Fabric Loader 0.19.3 与 Fabric API 0.97.8+1.20.5。详细设计与验收矩阵见
 `arsa-design.md`。项目使用 [Apache License 2.0](LICENSE) 许可证。
