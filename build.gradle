@@ -1,30 +1,12 @@
 plugins {
 	id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
-	id 'maven-publish'
-}
-
-repositories {
-	// Add repositories to retrieve artifacts from in here.
-	// You should only use this when depending on other mods because
-	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
-	// for more information about repositories.
 }
 
 loom {
-	splitEnvironmentSourceSets()
-
 	mods {
 		"arsa" {
 			sourceSet sourceSets.main
-			sourceSet sourceSets.client
 		}
-	}
-}
-
-fabricApi {
-	configureDataGeneration {
-		client = true
 	}
 }
 
@@ -70,8 +52,8 @@ jar {
 	}
 }
 
-// 所有可发布产物固定输出到项目根目录的 dist，避免交付 JAR 散落在不同构建目录。
-def releaseDirectory = layout.projectDirectory.dir("dist")
+// 所有可发布产物统一输出到根目录 releases/<version>，避免交付 JAR 散落在不同构建目录。
+def releaseDirectory = layout.projectDirectory.dir("releases/${project.version}")
 
 tasks.named("remapJar") {
 	destinationDirectory.set(releaseDirectory)
@@ -79,21 +61,4 @@ tasks.named("remapJar") {
 
 tasks.named("remapSourcesJar") {
 	destinationDirectory.set(releaseDirectory)
-}
-
-// configure the maven publication
-publishing {
-	publications {
-		create("mavenJava", MavenPublication) {
-			from components.java
-		}
-	}
-
-	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-	repositories {
-		// Add repositories to publish to here.
-		// Notice: This block does NOT have the same function as the block in the top level.
-		// The repositories here will be used for publishing your artifact, not for
-		// retrieving dependencies.
-	}
 }

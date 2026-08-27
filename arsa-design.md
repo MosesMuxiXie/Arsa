@@ -1,7 +1,8 @@
 # Arsa —— 附魔模板（Enchantment Template）详细设计方案（终稿）
 
 > 目标环境（已核对本工程）：**Minecraft 1.21.11** · Fabric Loader 0.19.3 · Fabric API 0.141.6+1.21.11 ·
-> Loom 1.17-SNAPSHOT · **Mojang 官方映射**（`loom.officialMojangMappings()`）· Java 21 · 分裂源集 + fabric-datagen。
+> Loom 1.17-SNAPSHOT · **Mojang 官方映射**（`loom.officialMojangMappings()`）· Java 21 · 单 main 源集
+> （空的 client / fabric-datagen 入口已随清理移除）。
 > 本方案全部 API 签名已通过 **Mojang 官方 1.21.11 映射表（piston-data）+ CFR 反编译 client-1.21.11.jar** 双重核实；
 > 少量标注 `【小核】` 的点是反编译未能覆盖的个别访问器名，落地时 1 分钟可确认。
 >
@@ -666,7 +667,7 @@ src/main/resources/
     └── advancement/recipes/misc/enchantment_template_copy.json
 ```
 
-`build.gradle` / `gradle.properties` 无需改动；datagen 入口可保留不动（本期手写 JSON 即可）。
+`build.gradle` / `gradle.properties` 无需改动；本工程已移除空的 datagen / client 入口，资源仍为手写 JSON。
 
 ---
 

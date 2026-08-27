@@ -13,12 +13,6 @@
 	"entrypoints": {
 		"main": [
 			"name.modid.Arsa"
-		],
-		"client": [
-			"name.modid.client.ArsaClient"
-		],
-		"fabric-datagen": [
-			"name.modid.client.ArsaDataGenerator"
 		]
 	},
 	"mixins": [

@@ -27,9 +27,11 @@ After you obtain your first enchantment template, the copy recipe unlocks in
 the Miscellaneous category of the crafting recipe book and supports automatic
 recipe placement.
 
-## Warning
+## Version support
 
-This mod only supports versions after 1.18, and after 2026/9 only updates mods after 1.20.
+This repository currently builds only **Minecraft 1.21.11**.
+Building requires Java 21, Fabric Loader 0.19.3 and Fabric API 0.141.6+1.21.11.
+See `arsa-design.md` for the detailed design and acceptance checklist.
 
 ## Building
 
@@ -37,15 +39,41 @@ This mod only supports versions after 1.18, and after 2026/9 only updates mods a
 .\gradlew.bat build
 ```
 
-The distributable mod and source archive are always written to `dist` as
-`arsa-1.3.0.jar` and `arsa-1.3.0-sources.jar`. Install only the former in the
-game's `mods` directory.
-All version-specific runtime JARs from Minecraft 1.20 through the latest stable
-release are collected in `dist/1.3.0`.
+Build artifacts are written to `releases/<version>/` (currently `releases/1.3.0/`):
 
-Building requires Java 21. Running the mod requires Fabric Loader 0.19.3 and
-Fabric API 0.141.6+1.21.11. See `arsa-design.md` for the detailed design and
-acceptance checklist.
+- `arsa-1.3.0.jar` — the only file you need to install in the game's `mods` directory
+- `arsa-1.3.0-sources.jar` — the source archive
+- `SHA256SUMS.txt` — checksums
+
+## Manual release process
+
+For every release, run these steps by hand; artifacts always go into `releases/<version>/`:
+
+1. Bump `version` in `gradle.properties` when releasing a new version.
+2. Clean and rebuild:
+
+   ```powershell
+   .\gradlew.bat clean build
+   ```
+
+   Both JARs are produced in `releases\<version>\`.
+3. Generate the checksums (PowerShell):
+
+   ```powershell
+   $v = (Select-String -Path gradle.properties -Pattern '^version=').Line.Split('=')[1]
+   Get-ChildItem "releases\$v\*.jar" | ForEach-Object {
+       "{0}  {1}" -f (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower(), $_.Name
+   } | Set-Content -Path "releases\$v\SHA256SUMS.txt" -Encoding ascii
+   ```
+
+4. Only deliver or publish after `.\gradlew.bat build` passes and the JARs plus
+   `SHA256SUMS.txt` are present in `releases\<version>\`. Distribute only
+   `arsa-<version>.jar` to players.
+5. Before publishing, walk through the acceptance checklist in the appendix of
+   `arsa-design.md` in a real client and keep screenshots as evidence.
+
+Keep only the latest release in `releases/`; historical artifacts should come
+from GitHub Releases / CI artifacts instead of being committed back to the repo.
 
 ## License
 

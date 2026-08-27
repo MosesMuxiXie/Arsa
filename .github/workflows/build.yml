@@ -17,15 +17,23 @@ jobs:
       - name: setup jdk
         uses: actions/setup-java@v5
         with:
-          java-version: '25'
+          java-version: '21'
           distribution: 'microsoft'
+      - name: setup gradle
+        uses: gradle/actions/setup-gradle@v4
       - name: make gradle wrapper executable
         run: chmod +x ./gradlew
       - name: build
         run: ./gradlew build
+      - name: generate checksums
+        shell: bash
+        run: |
+          VERSION=$(grep '^version=' gradle.properties | cut -d= -f2)
+          cd "releases/$VERSION"
+          sha256sum *.jar > SHA256SUMS.txt
       - name: capture build artifacts
         uses: actions/upload-artifact@v7
         with:
           name: Arsa-${{ github.sha }}
-          path: dist/*.jar
+          path: releases/**/*
           if-no-files-found: error

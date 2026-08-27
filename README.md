@@ -15,9 +15,11 @@ Minecraft Fabric 附魔模板模组。它把附魔书制成可复制、一次性
 获得第一个附魔模板后，复制配方会解锁在工作台配方书的“杂项”分类中，
 并支持一键摆放。
 
-## 提示
+## 版本支持
 
-此模组只支持1.18以后的版本，在2026年9月开始后只提供1.20以后的更新。
+本仓库当前只维护并构建 **Minecraft 1.21.11** 版本。
+需要 Java 21、Fabric Loader 0.19.3 与 Fabric API 0.141.6+1.21.11。
+详细设计与验收矩阵见 `arsa-design.md`。
 
 ## 构建
 
@@ -25,9 +27,38 @@ Minecraft Fabric 附魔模板模组。它把附魔书制成可复制、一次性
 .\gradlew.bat build
 ```
 
-正式模组与源码包统一生成在 `dist`：`arsa-1.3.0.jar` 和
-`arsa-1.3.0-sources.jar`。游戏安装时只需要前者。
-Minecraft 1.20 至当前正式最新版的全部对应运行 JAR 集中保存在 `dist/1.3.0`。
+构建产物统一输出到 `releases/<version>/`（当前为 `releases/1.3.0/`）：
 
-需要 Java 21、Fabric Loader 0.19.3 与 Fabric API 0.141.6+1.21.11。详细设计与验收矩阵见
-`arsa-design.md`。项目使用 [Apache License 2.0](LICENSE) 许可证。
+- `arsa-1.3.0.jar` —— 游戏安装只需要这个文件
+- `arsa-1.3.0-sources.jar` —— 源码包
+- `SHA256SUMS.txt` —— 校验和
+
+## 手工发布流程
+
+每次发布按下面步骤手工执行，产物一律进入 `releases/<版本号>/`：
+
+1. 需要发新版本时，修改 `gradle.properties` 中的 `version`。
+2. 清理旧构建并重新构建：
+
+   ```powershell
+   .\gradlew.bat clean build
+   ```
+
+   两个 JAR 会自动生成在 `releases\<version>\`。
+3. 生成校验和（PowerShell）：
+
+   ```powershell
+   $v = (Select-String -Path gradle.properties -Pattern '^version=').Line.Split('=')[1]
+   Get-ChildItem "releases\$v\*.jar" | ForEach-Object {
+       "{0}  {1}" -f (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower(), $_.Name
+   } | Set-Content -Path "releases\$v\SHA256SUMS.txt" -Encoding ascii
+   ```
+
+4. 校验：`.\gradlew.bat build` 通过、JAR 与 `SHA256SUMS.txt` 位于
+   `releases\<version>\` 后，才可交付或发布；游戏内只需分发 `arsa-<version>.jar`。
+5. 发布前建议按 `arsa-design.md` 附录的验收清单在客户端逐项测试并截图存档。
+
+`releases/` 目录只保留本次最新版产物；历史版本产物应从
+GitHub Releases / CI artifacts 等发布渠道获取，不应回填到仓库。
+
+项目使用 [Apache License 2.0](LICENSE) 许可证。
