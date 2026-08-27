@@ -14,6 +14,9 @@ template to a target item through the smithing table.
   and the book's prior-work penalty do not affect the price. The result is
   normalized to 10 levels during refresh, pickup validation, and pickup, and it
   never inherits a prior-work penalty.
+- Rename: place an enchantment template by itself in the anvil's left slot.
+  Renaming always costs one level, never adds a prior-work penalty, and cannot
+  be combined with an item in the right slot.
 - Copy: place a book in the top-center crafting slot, an enchantment template in
   the center, and emeralds in the other seven slots. The recipe produces two
   identical templates.
@@ -31,7 +34,7 @@ recipe placement.
 ```
 
 The distributable mod and source archive are always written to `dist` as
-`arsa-1.2.0-mc1.20.6.jar` and `arsa-1.2.0-mc1.20.6-sources.jar`. Install only the former in the
+`arsa-1.3.0-mc1.20.6.jar` and `arsa-1.3.0-mc1.20.6-sources.jar`. Install only the former in the
 game's `mods` directory.
 
 Building requires Java 21. Running the mod requires Fabric Loader 0.19.3 and
