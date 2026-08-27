@@ -133,7 +133,7 @@ id:            arsa:enchantment_template
 | `TemplateCopyRecipe extends CustomRecipe` | 工作台复制；显式提供 3×3 `PlacementInfo` / `display()` 以支持原版配方书 |
 | `TemplateApplicationRecipe implements SmithingRecipe` | 锻造台应用；覆写 `matches` 表达非空动态模板规则 |
 | `TemplateIngredients`（未采用，见下） | 早期草案：构造"任意可附魔物品"Ingredient；最终实现改为 Mixin 放宽（`SmithingMenuMixin`） |
-| `mixin/AnvilMenuMixin` | 铁砧制作逻辑注入（模板只读 + 固定 10 级/9 块规则） |
+| `mixin/AnvilMenuMixin` | 铁砧制作与模板重命名逻辑注入（制作固定 10 级/9 块；重命名固定 1 级） |
 | `mixin/SmithingMenuMixin` | 放宽锻造台基底槽（任意合法物品可放入/shift 放入），模板槽无需处理 |
 
 **不需要**锻造台消耗 Mixin：已核实 1.21.11 `SmithingMenu.onTake` 对模板/基底/材料三槽
@@ -162,13 +162,14 @@ id:            arsa:enchantment_template
    - 书无附魔（`getEnchantmentsForCrafting(left).isEmpty()`）或块 < 9 →
      输出槽置空、`cost.set(0)`、`repairItemCountCost = 0`，`cancel()`；
    - 条件满足 → 输出槽放模板、`cost.set(10)`、**`repairItemCountCost = 9`**，`cancel()`。
-2. **左槽=附魔模板** → 输出置空、`cancel()`（模板只读，见第 10 节）。
+2. **左槽=附魔模板** → 仅当右槽为空且名称发生变化时输出模板副本，固定 `cost=1`；
+   右槽非空或名称未变化时输出置空。重命名不写入 `repair_cost`。
 3. 其它情况不 `cancel()`，原样走原版。
 
 原理：注入直接构造新模板，只复制书的附魔组件，不读取书的 `repair_cost`
 或原版计价结果。为了防止附魔书的历史 penalty、菜单旧状态或其他铁砧逻辑把费用
 重新抬高，结果刷新后、`mayPickup` 取出资格判断时和 `onTake` 实际取出前都会再次
-强制写入 `cost=10`；模板结果还会显式移除 `repair_cost`。原版 `onTake` 随后完成
+按操作强制写入固定费用（制作 10 级、重命名 1 级）；模板结果还会显式移除 `repair_cost`。制作时原版 `onTake` 随后完成
 "扣 10 级、吞书、扣 9 块、消耗时 12% 概率敲铁砧"。生存模式只需 ≥10 级，
 创造模式可直接取出。
 
@@ -284,7 +285,8 @@ for (Holder<Enchantment> holder : toAdd.keySet()) {
    经验不足状态，因此无需任何客户端 `AnvilScreenMixin`，工作区中已移除。
 2. **`repairItemCountCost = 9` 是消耗正确性的关键**：忘了它，原版把整组绿宝石块吞掉。
 3. **块 < 9 必须主动置空**：否则原版把"书+块"当普通合并，输出修理费用上涨的怪书。
-4. **模板再进铁砧**会被合并/改名并写入 repair_cost → 禁模板进左槽（模板只读）。
+4. **模板再进铁砧**仅允许右槽为空的纯重命名，固定消耗 1 级且不写入 repair_cost；
+   右槽放入任何物品时禁止输出，避免模板参与原版合并逻辑。
 5. **砂轮**会把模板洗成"空模板"；空模板在三处使用点都要求非空，惰性物品，可接受。
 6. **堆叠**：附魔相同的模板堆叠到 64、不同则不堆叠——组件判等的正确行为，不要自定义 equals。
 7. **复制配方 `assemble` 必须写组件**，否则复制出两个空模板。
@@ -320,7 +322,7 @@ name.modid
 │   ├── TemplateCopyRecipe.java       工作台复制
 │   └── TemplateApplicationRecipe.java 锻造台应用
 └── mixin
-    ├── AnvilMenuMixin.java           铁砧制作 + 模板只读
+    ├── AnvilMenuMixin.java           铁砧制作 + 模板重命名
     ├── SmithingMenuMixin.java        锻造台基底槽放宽
 ```
 
@@ -448,7 +450,7 @@ public abstract class SmithingMenuMixin {
 }
 ```
 
-### AnvilMenuMixin（铁砧制作 + 模板只读；与工作区实现一致）
+### AnvilMenuMixin（铁砧制作 + 模板重命名；与工作区实现一致）
 
 > 关键写法（1.21.11 实测）：mixin 直接 **extends ItemCombinerMenu**（与官方 Fabric API 的
 > AnvilMenuMixin 同款），`inputSlots`/`resultSlots`/`broadcastChanges()` 全部继承直接调用，
@@ -459,7 +461,10 @@ public abstract class SmithingMenuMixin {
 @Mixin(AnvilMenu.class)
 public abstract class AnvilMenuMixin extends ItemCombinerMenu {
     @Unique
-    private static final int TEMPLATE_LEVEL_COST = 10;
+    private static final int TEMPLATE_CREATION_LEVEL_COST = 10;
+    @Unique
+    private static final int TEMPLATE_RENAME_LEVEL_COST = 1;
+    @Shadow private String itemName;
     @Shadow private DataSlot cost;
     @Shadow private int repairItemCountCost;
 
@@ -473,12 +478,13 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
         ItemStack left  = this.inputSlots.getItem(0);
         ItemStack right = this.inputSlots.getItem(1);
 
-        // 模板只读：禁止再进铁砧合并/改名
+        // 模板仅允许右槽为空时重命名；名称有变化才产生输出。
         if (TemplateEnchantments.isTemplate(left)) {
             ci.cancel();
-            this.resultSlots.setItem(0, ItemStack.EMPTY);
-            this.cost.set(0);
-            this.repairItemCountCost = 0;
+            this.arsa$setEmptyResult();
+            if (right.isEmpty()) {
+                this.arsa$setTemplateRenameResult(left);
+            }
             this.broadcastChanges();
             return;
         }
@@ -498,8 +504,8 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
     }
 
     // 完整实现还会在 createResult RETURN、mayPickup HEAD 与 onTake HEAD
-    // 三处调用同一归一规则：移除结果 repair_cost、cost=10、右槽消耗=9。
-    // mayPickup 对模板直接按“创造或经验等级>=10”返回，杜绝旧 cost 参与判断。
+    // 三处按操作归一：制作 cost=10、右槽消耗=9；重命名 cost=1、右槽消耗=0。
+    // 两种操作都会移除结果 repair_cost，杜绝旧 penalty 参与判断。
 }
 ```
 
@@ -669,7 +675,8 @@ src/main/resources/
 1. **（已核实）1.21.11 真实存在**；本工程已指向它，方案按 1.21.2+ API 体系编写并经官方映射+反编译核实。
 2. **Too Expensive 与 GUI 费用**：本配方固定 10 级，低于原版 40 级阈值；
    原版 GUI 自行显示，不需要 `AnvilScreenMixin`。
-3. **建议补规则：模板只读**，禁止进铁砧（否则原版会合并两个模板并写入 repair_cost）——已实现。
+3. **模板铁砧规则**：允许右槽为空时纯重命名，固定消耗 1 级且不写入 `repair_cost`；
+   仍禁止模板与右槽物品合并——已实现。
 4. **建议复制配方要求模板非空**（否则可无限复制空模板）——已实现。
 5. **绿宝石块数量**：建议明确"**≥9 个、消耗 9 个**"；想严格可改恰好 9。
 6. **锻造台材料槽必须为空**：由 `additionIngredient()=Optional.empty()` 天然保证，规则已明确。
